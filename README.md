@@ -58,32 +58,23 @@ go build -o kubergrunt -ldflags "-X main.VERSION=v0.7.6 -extldflags '-static'" .
 
 The following commands are available as part of `kubergrunt`:
 
-- [kubergrunt](#kubergrunt)
-  - [Installation](#installation)
-    - [3rd party package managers](#3rd-party-package-managers)
-  - [Building from source](#building-from-source)
-  - [Commands](#commands)
-    - [eks](#eks)
-      - [verify](#verify)
-      - [configure](#configure)
-      - [token](#token)
-      - [oidc-thumbprint](#oidc-thumbprint)
-      - [deploy](#deploy)
-      - [sync-core-components](#sync-core-components)
-      - [cleanup-security-group](#cleanup-security-group)
-      - [schedule-coredns](#schedule-coredns)
-      - [drain](#drain)
-    - [k8s](#k8s)
-      - [wait-for-ingress](#wait-for-ingress)
-      - [kubectl](#kubectl)
-    - [tls](#tls)
-      - [gen](#gen)
-    - [Deprecated commands](#deprecated-commands)
-      - [helm](#helm)
-  - [Who maintains this project?](#who-maintains-this-project)
-  - [How do I contribute?](#how-do-i-contribute)
-  - [How is this project versioned?](#how-is-this-project-versioned)
-  - [License](#license)
+1. [eks](#eks)
+    * [verify](#verify)
+    * [configure](#configure)
+    * [token](#token)
+    * [oidc-thumbprint](#oidc-thumbprint)
+    * [deploy](#deploy)
+    * [sync-core-components](#sync-core-components)
+    * [cleanup-security-group](#cleanup-security-group)
+    * [schedule-coredns](#schedule-coredns)
+    * [drain](#drain)
+1. [k8s](#k8s)
+    * [wait-for-ingress](#wait-for-ingress)
+    * [kubectl](#kubectl)
+1. [tls](#tls)
+    * [gen](#gen)
+1. [Deprecated commands](#deprecated-commands)
+    * [helm](#helm)
 
 
 ### eks
@@ -274,8 +265,8 @@ each stage and if the `deploy` subcommand fails for some reason, execution resum
 The existing recovery file can also be ignored with the `--ignore-recovery-file` flag. In this case the recovery
 file will be re-initialized.
 
-If you have any unused service Load Balancers that are in a Pending state, you may opt to use the flag `--ignore-loadbalancer-state`
-in order to avoid failure when checking for load balancer status.
+If you have any unused service Load Balancers that are in a Pending state, you may opt to use the flag
+`--ignore-loadbalancer-state` in order to avoid failure when checking for load balancer status.
 
 #### sync-core-components
 
