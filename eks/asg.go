@@ -82,6 +82,7 @@ func waitAndVerifyNewInstances(
 	kubectlOptions *kubectl.KubectlOptions,
 	maxRetries int,
 	sleepBetweenRetries time.Duration,
+	ignoreLoadBalancerState bool,
 ) error {
 	logger := logging.GetProjectLogger()
 
@@ -107,9 +108,11 @@ func waitAndVerifyNewInstances(
 	}
 	elbs, err := kubectl.GetAWSLoadBalancers(kubectlOptions)
 	if err != nil {
-		logger.Errorf("Error retrieving associated ELB names of the Kubernetes services.")
-		logger.Errorf("Undo by terminating all the new instances and trying again")
-		return err
+		if !(ignoreLoadBalancerState) {
+			logger.Errorf("Error retrieving associated ELB names of the Kubernetes services.")
+			logger.Errorf("Undo by terminating all the new instances and trying again")
+			return err
+		}
 	}
 	err = waitForAnyInstancesRegisteredToELB(elbSvc, elbv2Svc, elbs, instanceIds)
 	if err != nil {

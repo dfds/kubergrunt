@@ -65,6 +65,10 @@ var (
 		Value: "10m",
 		Usage: "The amount of time to wait for operations to complete, expressed as a duration (e.g., 10m = 10 minutes). Defaults to 10 minutes.",
 	}
+	ignoreLoadBalancerStateFlag = cli.BoolFlag{
+		Name:  "ignore-loadbalancer-state",
+		Usage: "Ignore the state of any service Load Balancer.",
+	}
 
 	// Token related flags
 	clusterIDFlag = cli.StringFlag{
@@ -252,6 +256,7 @@ As the deploy command contains multiple stages, this command also generates a re
 					waitMaxRetriesFlag,
 					waitSleepBetweenRetriesFlag,
 					ignoreRecoveryFileFlag,
+					ignoreLoadBalancerStateFlag,
 				},
 			},
 			cli.Command{
@@ -415,6 +420,7 @@ func rollOutDeployment(cliContext *cli.Context) error {
 	ignoreRecoveryFile := cliContext.Bool(ignoreRecoveryFileFlag.Name)
 	waitMaxRetries := cliContext.Int(waitMaxRetriesFlag.Name)
 	waitSleepBetweenRetries := cliContext.Duration(waitSleepBetweenRetriesFlag.Name)
+	ignoreLoadBalancerState := cliContext.Bool(ignoreLoadBalancerStateFlag.Name)
 
 	return eks.RollOutDeployment(
 		region,
@@ -425,6 +431,7 @@ func rollOutDeployment(cliContext *cli.Context) error {
 		waitMaxRetries,
 		waitSleepBetweenRetries,
 		ignoreRecoveryFile,
+		ignoreLoadBalancerState,
 	)
 }
 

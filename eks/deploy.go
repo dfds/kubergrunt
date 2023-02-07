@@ -36,6 +36,7 @@ func RollOutDeployment(
 	maxRetries int,
 	sleepBetweenRetries time.Duration,
 	ignoreRecoveryFile bool,
+	ignoreLoadBalancerState bool,
 ) (returnErr error) {
 	logger := logging.GetProjectLogger()
 	logger.Infof("Beginning roll out for EKS cluster worker group %s in %s", eksAsgName, region)
@@ -74,7 +75,7 @@ func RollOutDeployment(
 		return err
 	}
 
-	err = state.waitForNodes(ec2Svc, elbSvc, elbv2Svc, kubectlOptions)
+	err = state.waitForNodes(ec2Svc, elbSvc, elbv2Svc, kubectlOptions, ignoreLoadBalancerState)
 	if err != nil {
 		return err
 	}
