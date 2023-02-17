@@ -258,12 +258,15 @@ the user of any services that do not have a check.
 
 **`eks deploy` recovery file**
 
-Due to the nature of rolling update, the `deploy` subcommand performs multiple sequential actions that 
+Due to the nature of rolling update, the `deploy` subcommand performs multiple sequential actions that
 depend on success of the previous operations. To mitigate intermittent failures, the `deploy` subcommand creates a
-recovery file in the working directory for storing current deploy state. The recovery file is updated after 
+recovery file in the working directory for storing current deploy state. The recovery file is updated after
 each stage and if the `deploy` subcommand fails for some reason, execution resumes from the last successful state.
-The existing recovery file can also be ignored with the `--ignore-recovery-file` flag. In this case the recovery 
+The existing recovery file can also be ignored with the `--ignore-recovery-file` flag. In this case the recovery
 file will be re-initialized.
+
+If you have any unused service Load Balancers that are in a Pending state, you may opt to use the flag
+`--ignore-loadbalancer-state` in order to avoid failure when checking for load balancer status.
 
 #### sync-core-components
 

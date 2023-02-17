@@ -1,6 +1,11 @@
 package eks
 
 import (
+	"io/ioutil"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/aws/aws-sdk-go/service/autoscaling"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/elb"
@@ -9,11 +14,7 @@ import (
 	"github.com/gruntwork-io/kubergrunt/kubectl"
 	"github.com/gruntwork-io/kubergrunt/logging"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"k8s.io/apimachinery/pkg/util/json"
-	"os"
-	"strings"
-	"time"
 )
 
 // Store the state to current directory by default
@@ -226,13 +227,13 @@ func (state *DeployState) scaleUp(asgSvc *autoscaling.AutoScaling) error {
 // - Wait for the capacity in the ASG to meet the desired capacity (instances are launched)
 // - Wait for the new instances to be ready in Kubernetes
 // - Wait for the new instances to be registered with external load balancers
-func (state *DeployState) waitForNodes(ec2Svc *ec2.EC2, elbSvc *elb.ELB, elbv2Svc *elbv2.ELBV2, kubectlOptions *kubectl.KubectlOptions) error {
+func (state *DeployState) waitForNodes(ec2Svc *ec2.EC2, elbSvc *elb.ELB, elbv2Svc *elbv2.ELBV2, kubectlOptions *kubectl.KubectlOptions, ignoreLoadBalancerState bool) error {
 	if state.WaitForNodesDone {
 		state.logger.Debug("Wait for nodes already done - skipping")
 		return nil
 	}
 	asg := &state.ASGs[0]
-	err := waitAndVerifyNewInstances(ec2Svc, elbSvc, elbv2Svc, asg.NewInstances, kubectlOptions, state.maxRetries, state.sleepBetweenRetries)
+	err := waitAndVerifyNewInstances(ec2Svc, elbSvc, elbv2Svc, asg.NewInstances, kubectlOptions, state.maxRetries, state.sleepBetweenRetries, ignoreLoadBalancerState)
 	if err != nil {
 		state.logger.Errorf("Error while waiting for new nodes to be ready.")
 		state.logger.Errorf("Either resume with the recovery file or terminate the new instances.")
